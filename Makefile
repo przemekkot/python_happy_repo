@@ -1,4 +1,4 @@
-.PHONY: help clean clean-build clean-pyc clean-test coverage check_code dist dist-upload docs document docker format_code install lint requirements servedocs test test-all virtualenv
+.PHONY: help clean clean-build clean-pyc clean-test coverage check_code dist dist-upload docs document docker format_code install lint requirements servedocs test test-all virtualenv activate env
 
 .DEFAULT_GOAL := help
 
@@ -114,3 +114,10 @@ virtualenv:
 	@echo
 	@echo "VirtualENV Setup Complete. Now run: source .venv/bin/activate"
 	@echo
+
+activate:
+	source .venv/bin/activate
+
+env:
+	make virtualenv
+	make activate
