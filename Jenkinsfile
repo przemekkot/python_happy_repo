@@ -1,10 +1,10 @@
 pipeline {
     agent {
-            dockerfile true
+           dockerfile true
            
-            //docker {
-            //    image 'python:3.8-slim'
-            //}
+           //docker {
+           //    image 'python:3.8-slim'
+           //}
         }
     stages {
         stage('Preparation') { // for display purposes
