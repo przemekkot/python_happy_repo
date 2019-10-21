@@ -7,7 +7,6 @@ import pytest
 
 from click.testing import CliRunner
 
-from happy_repo import happy_repo
 from happy_repo import cli
 
 
