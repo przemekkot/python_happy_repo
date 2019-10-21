@@ -18,7 +18,6 @@ pipeline {
                 // }
 
                // Get some code from a GitHub repository
-               sh 'sudo pip install --user -r requirements_dev.txt'
                sh 'make lint'
             }
         }
