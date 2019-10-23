@@ -3,7 +3,7 @@ pipeline {
     agent {
           dockerfile {
                filename 'Dockerfile'
-               args '--rm'
+               //this probably breaks build at the end: args '--rm'
                reuseNode true
           }
                      //add a docker file for this stage only
