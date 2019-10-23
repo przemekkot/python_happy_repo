@@ -73,7 +73,7 @@ dist: clean
 	python setup.py bdist_wheel
 
 dist-upload:
-	twine upload dist/* -u ${PYPI_USER} -p ${PYPI_PASS}
+	twine upload --repository-url ${PYPI_REPO} dist/* -u ${PYPI_USER} -p ${PYPI_PASS}
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/happy_repo.rst

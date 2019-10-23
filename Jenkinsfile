@@ -19,6 +19,7 @@ pipeline {
     environment {
       PYPI_USER=credentials('pypi_user')
       PYPI_PASS=credentials('pypi_pass')
+      PYPI_REPO='https://test.pypi.org/legacy/'
       JENKINS="True"
     }
 
@@ -80,7 +81,7 @@ pipeline {
                 //sh 'echo -e "password = $PYPI_PASS" >> ~/.pypirc'
 
                 // .pypirc is in jenkins folder
-                sh 'make dist-upload PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
+                sh 'make dist-upload PYPI_REPO=$PYPI_REPO PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
             }
         }    
     }
