@@ -14,9 +14,7 @@ from happy_repo import simple_function
 @click.argument('string', type=str)
 def main(upper, string):
     """Console script for happy_repo."""
-    click.echo("Replace this message by putting your code into "
-               "happy_repo.cli.main")
-    click.echo("See click documentation at https://click.palletsprojects.com/")
+    click.echo("Hello! This is Happy Repo")
 
     value = simple_function(string)
 

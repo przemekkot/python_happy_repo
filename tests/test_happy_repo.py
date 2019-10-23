@@ -31,7 +31,7 @@ def test_command_line_interface():
     runner = CliRunner()
     result = runner.invoke(cli.main, ['ryba'])
     assert result.exit_code == 0
-    assert 'happy_repo.cli.main' in result.output
+    assert 'Hello! This is Happy Repo' in result.output
     assert 'ryba' in result.output
 
     help_result = runner.invoke(cli.main, ['--help'])
@@ -44,7 +44,7 @@ def test_command_line_interface():
         'ryba',
     ])
     assert result.exit_code == 0
-    assert 'happy_repo.cli.main' in result.output
+    assert 'Hello! This is Happy Repo' in result.output
     assert 'ryba' in result.output
     assert 'RYBA' in result.output
 
