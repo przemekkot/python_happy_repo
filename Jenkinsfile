@@ -3,7 +3,7 @@ pipeline {
     agent {
           dockerfile {
                filename 'Dockerfile'
-               //args '--rm'
+               args '--rm'
                reuseNode true
           }
                      //add a docker file for this stage only
@@ -17,8 +17,8 @@ pipeline {
     }
 
     environment {
-      PYPI_USER=creditentials('pypi_user')
-      PYPI_PASS=creditentials('pypi_pass')
+      PYPI_USER=credentials('pypi_user')
+      PYPI_PASS=credentials('pypi_pass')
       JENKINS="True"
     }
 
