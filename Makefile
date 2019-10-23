@@ -114,7 +114,7 @@ test:
 		tests/
 
 test-xunit:
-	mkdir build
+	mkdir -p build
 	python -m pytest \
 		--junitxml=build/output_pytest.xml \
 		-v \
