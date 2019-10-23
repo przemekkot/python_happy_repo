@@ -5,6 +5,9 @@
 
 from setuptools import setup, find_packages
 
+with open('.version') as version_file:
+    version = version_file.read()
+
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
@@ -50,6 +53,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/przemekkot/happy_repo',
-    version='0.1.0',
+    version=version,
     zip_safe=False,
 )
