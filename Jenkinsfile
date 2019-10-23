@@ -74,11 +74,12 @@ pipeline {
                 echo 'Releasing'
                 // here do all the stuff for publishing package online
 
-                sh 'echo -e "[pypi]" >> ~/.pypirc'
-                sh 'echo -e "repository: https://test.pypi.org/legacy/" >> ~/.pypirc'
-                sh 'echo -e "username = $PYPI_USER" >> ~/.pypirc'
-                sh 'echo -e "password = $PYPI_PASS" >> ~/.pypirc'
+                //sh 'echo -e "[pypi]" >> ~/.pypirc'
+                //sh 'echo -e "repository: https://test.pypi.org/legacy/" >> ~/.pypirc'
+                //sh 'echo -e "username = $PYPI_USER" >> ~/.pypirc'
+                //sh 'echo -e "password = $PYPI_PASS" >> ~/.pypirc'
 
+                // .pypirc is in jenkins folder
                 sh 'make dist-upload'
             }
         }    
