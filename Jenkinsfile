@@ -4,7 +4,6 @@ pipeline {
           dockerfile {
                filename 'Dockerfile'
                args '--rm'
-               reuseNode true
           }
                      //add a docker file for this stage only
     }
