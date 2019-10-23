@@ -1,144 +1,73 @@
 pipeline {
-    agent {
-        node {
-            label 'docker'
-        }
+    agent any
+
+    options {
+        //skipDefaultCheckout(true)
+        // Keep the 10 most recent builds
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+
+    environment {
+      JENKINS="True"
     }
 
     stages {
-        stage('Preparation') { // for display purposes
+        stage('Code pull') {
             steps {
+                echo 'Code pull'
             }
         }
-
-        stage('Dev branch pipeline') { // for display purposes
-            deleteDir()
-            when {
-                branch "dev"
-            }
-
-            agent {
-                dockerfile {
-                    filename 'Dockerfile'
-                }
-                //add a docker file for this stage only
-            }
-
+        stage('Test') {
             steps {
-                //git branch: 'master',
-                git credentialsId: 'Blue',
-                    url: 'git@192.168.8.106:/srv/happy_repo.git',
-                    branch: 'dev'
-
-                // do some linting and testing
-                sh 'make lint'
-                sh 'make test'
+                echo 'Testing'
+            }
+        }
+        stage('Build package') {
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+            }
+            steps {
+                echo 'Building'
             }
             post {
-                success {
-                    sshagent (credentials: ['Blue']){
-                        sh 'git fetch origin test'
-                        sh 'git checkout test'
-                        sh 'git merge dev'
-                        sh 'git push origin test'
-                    }
+                always {
+                    // Archive unit tests for the future
+                    //archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/*whl', fingerprint: true)
+                    echo 'Results saved'
                 }
             }
         }
-
-        stage('Test branch pipeline') { // for display purposes
-            deleteDir()
-            when {
-                branch "test"
-            }
-
-            agent {
-                dockerfile {
-                    filename 'Dockerfile-build'
-                }
-            }
+        stage('Deploy') {
             steps {
-                deleteDir()
-                //git branch: 'master',
-                git credentialsId: 'Blue',
-                    url: 'git@192.168.8.106:/srv/happy_repo.git',
-                    branch: 'test'
-
-                // do some linting and testing
-                sh 'make build'
-                sh 'make test-build'
-                sh 'make d'
-                sh ''
-            }
-            post {
-                success {
-                    sshagent (credentials: ['Blue']) {
-                        sh 'git fetch origin master'
-                        sh 'git checkout master'
-                        sh 'git merge test'
-                        sh 'git push origin master'
-                    }
-                }
+                echo 'Deploying'
             }
         }
 
-
-        stage('Master branch pipeline') { // for display purposes
-            deleteDir()
-            when {
-                allOf {
-                    branch "master"
-                    tag "release"
-                }
-            }
-
-            agent {
-                dockerfile {
-                    filename 'Dockerfile-build'
-                }
-            }
+        stage('Release') {
             steps {
-                deleteDir()
-                //git branch: 'master',
-                git credentialsId: 'Blue',
-                    url: 'git@192.168.8.106:/srv/happy_repo.git',
-                    branch: 'master'
-
-                // do some linting and testing
-                sh 'make build'
-                sh 'make dist'
+                echo 'Releasing'
             }
-            def version = sh 'cat .version'
-            post {
-                success {
-                    sshagent (credentials: ['Blue']) {
-                        sh 'git fetch origin master'
-                        sh 'git checkout master'
-                        sh 'git merge test'
-                        sh 'git tag ${version}'
-                        sh 'git push origin ${version}'
-                    }
-                }
-            }
+        }    
+    }
+    post {
+        always {
+            echo 'This will always run'
         }
-        stage('Release branch pipeline') { // for display purposes
-            deleteDir()
-            when {
-                branch "release"
-            }
-
-            agent any
-            steps {
-                //git branch: 'master',
-                git credentialsId: 'Blue',
-                    url: 'git@192.168.8.106:/srv/happy_repo.git',
-                    branch: 'release'
-
-                // do some linting and testing
-                sshagent (credentials: ['Github']) {
-                    sh 'git push github ${version}'
-                }
-            }
+        success {
+            echo 'This will run only if successful'
+        }
+        failure {
+            echo 'This will run only if failed'
+        }
+        unstable {
+            echo 'This will run only if the run was marked as unstable'
+        }
+        changed {
+            echo 'This will run only if the state of the Pipeline has changed'
+            echo 'For example, if the Pipeline was previously failing but is now successful'b
         }
     }
 }
