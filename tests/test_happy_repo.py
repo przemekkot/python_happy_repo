@@ -7,6 +7,7 @@ import pytest
 
 from click.testing import CliRunner
 
+from happy_repo import happy_repo
 from happy_repo import cli
 
 
@@ -35,3 +36,14 @@ def test_command_line_interface():
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
     assert '--help  Show this message and exit.' in help_result.output
+
+def test_simple_function():
+    """Test a simple function"""
+
+    function = happy_repo.simple_function
+
+    assert 'cow' == function('cow')
+    assert '' == function('')
+    assert 0 == function(0)
+    assert 3 == function(3)
+    assert None == function(None)
