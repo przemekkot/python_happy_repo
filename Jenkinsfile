@@ -1,11 +1,17 @@
 pipeline {
-    agent any
+    
+    agent {
+          dockerfile {
+                     filename 'Dockerfile'
+                     }
+                     //add a docker file for this stage only
+      }
 
     options {
-        //skipDefaultCheckout(true)
-        // Keep the 10 most recent builds
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-        timestamps()
+          //skipDefaultCheckout(true)
+          // Keep the 10 most recent builds
+          buildDiscarder(logRotator(numToKeepStr: '10'))
+          timestamps()
     }
 
     environment {
@@ -16,7 +22,9 @@ pipeline {
         stage('Code pull') {
             steps {
                 echo 'Code pull'
-            }
+                sh 'make lint'
+                sh 'echo $JENKINS'
+                }
         }
         stage('Test') {
             steps {
