@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
-
 """Console script for happy_repo."""
 import sys
 import click
 from happy_repo import simple_function
 
+
 @click.command()
-@click.option('--upper', type=bool, default=False, is_flag=True, flag_value=True)
+@click.option('--upper',
+              type=bool,
+              default=False,
+              is_flag=True,
+              flag_value=True)
 @click.argument('string', type=str)
 def main(upper, string):
     """Console script for happy_repo."""

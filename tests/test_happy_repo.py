@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """Tests for `happy_repo` package."""
 
 import pytest
@@ -40,9 +39,11 @@ def test_command_line_interface():
     assert "--help   Show this message and exit." in str(help_result.output)
 
     runner = CliRunner()
-    result = runner.invoke(cli.main, ['--upper', 'ryba',])
+    result = runner.invoke(cli.main, [
+        '--upper',
+        'ryba',
+    ])
     assert result.exit_code == 0
-    print(result.output)
     assert 'happy_repo.cli.main' in result.output
     assert 'ryba' in result.output
     assert 'RYBA' in result.output
@@ -57,4 +58,4 @@ def test_simple_function():
     assert '' == function('')
     assert 0 == function(0)
     assert 3 == function(3)
-    assert None == function(None)
+    assert None is function(None)
