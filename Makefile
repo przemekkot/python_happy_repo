@@ -1,4 +1,4 @@
-.PHONY: help clean clean-build clean-pyc clean-test coverage check_code dist dist-upload docs document docker format_code install lint requirements servedocs test test-all virtualenv activate env
+.PHONY: help clean clean-build clean-pyc clean-test coverage check_code dist dist-upload docs document docker format_code install lint requirements servedocs test test-all virtualenv activate env test-xunit
 
 .DEFAULT_GOAL := help
 
@@ -101,6 +101,13 @@ servedocs: docs ## compile the docs watching for changes
 
 test:
 	python -m pytest \
+		-v \
+		tests/
+
+test-xunit:
+	mkdir build
+	python -m pytest \
+		--junitxml=build/output_pytest.xml \
 		-v \
 		tests/
 
