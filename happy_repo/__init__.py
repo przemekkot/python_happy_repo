@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from .happy_repo import simple_function
 
 """Top-level package for happy_repo."""
 
