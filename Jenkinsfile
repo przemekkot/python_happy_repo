@@ -17,6 +17,8 @@ pipeline {
     }
 
     environment {
+      PYPI_USER=creditentials('pypi_user')
+      PYPI_PASS=creditentials('pypi_pass')
       JENKINS="True"
     }
 
@@ -25,12 +27,21 @@ pipeline {
             steps {
                 echo 'Code pull'
                 sh 'make lint'
-                sh 'echo $JENKINS'
                 }
         }
         stage('Test') {
             steps {
                 echo 'Testing'
+                sh 'make test-xunit'
+
+                echo 'Coverage'
+                sh 'make coverage'
+            }
+            post {
+                always {
+                       archiveArtifacts allowEmptyArchive: true, artifacts: 'build/*_pytest.xml', fingerprint: true
+                       //TODO: add saving stuff for coverage
+                }
             }
         }
         stage('Build package') {
@@ -41,11 +52,12 @@ pipeline {
             }
             steps {
                 echo 'Building'
+                sh 'make dist'
             }
             post {
                 always {
                     // Archive unit tests for the future
-                    //archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/*whl', fingerprint: true)
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/*whl', fingerprint: true)
                     echo 'Results saved'
                 }
             }
@@ -53,19 +65,29 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying'
+                // here do all the stuff for deploying service online
             }
         }
 
         stage('Release') {
             steps {
                 echo 'Releasing'
+                // here do all the stuff for publishing package online
+
+                sh 'echo -e "[pypi]" >> ~/.pypirc'
+                sh 'echo -e "repository: https://test.pypi.org/legacy/" >> ~/.pypirc'
+                sh 'echo -e "username = $PYPI_USER" >> ~/.pypirc'
+                sh 'echo -e "password = $PYPI_PASS" >> ~/.pypirc'
+
+                sh 'make dist-upload'
             }
         }    
     }
     post {
         always {
             //clean the container
-            sh 'docker system prune --volumes -f'
+            //cleaning the dockers 
+            //this should be done somewhere: sh 'docker system prune --volumes -f'
             echo 'This will always run'
         }
         success {
