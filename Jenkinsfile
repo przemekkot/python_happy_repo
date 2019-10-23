@@ -1,11 +1,8 @@
 pipeline {
-    
+
     agent {
-          dockerfile {
-                     filename 'Dockerfile'
-                     }
-                     //add a docker file for this stage only
-      }
+          label 'python-builder'
+    }
 
     options {
           //skipDefaultCheckout(true)
@@ -20,6 +17,15 @@ pipeline {
 
     stages {
         stage('Code pull') {
+            agent {
+               dockerfile {
+                   filename 'Dockerfile'
+                   args '--rm'
+                   reuseNode true
+               }
+                     //add a docker file for this stage only
+            }
+
             steps {
                 echo 'Code pull'
                 sh 'make lint'
@@ -62,6 +68,8 @@ pipeline {
     }
     post {
         always {
+            //clean the container
+            sh 'docker system prune --volumes -f'
             echo 'This will always run'
         }
         success {
