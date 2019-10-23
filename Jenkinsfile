@@ -1,7 +1,12 @@
 pipeline {
 
     agent {
-          label 'python-builder'
+          dockerfile {
+               filename 'Dockerfile'
+               args '--rm'
+               reuseNode true
+          }
+                     //add a docker file for this stage only
     }
 
     options {
@@ -17,15 +22,6 @@ pipeline {
 
     stages {
         stage('Code pull') {
-            agent {
-               dockerfile {
-                   filename 'Dockerfile'
-                   args '--rm'
-                   reuseNode true
-               }
-                     //add a docker file for this stage only
-            }
-
             steps {
                 echo 'Code pull'
                 sh 'make lint'
