@@ -1,0 +1,12 @@
+* kanban
+** in
+*** add read the docs to pipeline
+*** fix the setup.py (figure out what to do)
+*** check tox and what i can do
+*** make readme.rst
+*** fill out docs
+*** generate docs
+*** do performance checking (?)
+*** divide the pipeline of 2 branches or 3 with publishing to real pypi and some github repo
+** started
+** done
