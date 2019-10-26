@@ -1,15 +1,15 @@
 pipeline {
 
-    agent {
-          dockerfile {
-               filename 'Dockerfile'
+    agent any
+    //      dockerfile {
+    //           filename 'Dockerfile'
                //args '-v keys:/home/goblin/.ssh'
                //args '-v /etc/passwd:/etc/passwd'
                //this probably breaks build at the end: args '--rm'
-               reuseNode true
-          }
-                     //add a docker file for this stage only
-    }
+    //           reuseNode true
+    //      }
+    //add a docker file for this stage only
+    //}
 
     options {
           //skipDefaultCheckout(true)
@@ -26,9 +26,12 @@ pipeline {
     }
 
     stages {
-        stage('Code check') {
+        stage('Init and Code check') {
             steps {
                 echo 'Code pull'
+                sh 'python3 -m virtualenv .venv'
+                sh 'source .venv/bin/activate'
+                sh 'pip install -r requirements_dev.txt'
                 sh 'make lint'
                 }
         }
