@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Push to Tests branch') {
             when {
-                 branch 'dev'
+                 branch 'jenkinsfile'
             }
             steps {
                 echo 'Pushing to tests'
@@ -58,6 +58,7 @@ pipeline {
         }
         stage('Build package') {
             when {
+                anyOf { branch 'dev'; branch 'master' }
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
