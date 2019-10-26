@@ -48,10 +48,12 @@ pipeline {
         stage('Push to Tests branch') {
             steps {
                 echo 'Pushing to tests'
-                sh 'git remote add main git@192.168.8.106:/srv/happy_repo.git'
-                sh 'git checkout tests'
-                sh 'git merge dev'
-                sh 'git push main tests'
+                sshagent(['Blue']) {
+                   sh 'git remote add main git@192.168.8.106:/srv/happy_repo.git'
+                   sh 'git checkout tests'
+                   sh 'git merge dev'
+                   sh 'git push main tests'
+                }
             }
         }
         stage('Build package') {
