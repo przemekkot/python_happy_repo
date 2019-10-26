@@ -2,7 +2,7 @@ FROM python:3.8-slim
 
 USER root
 
-RUN groupadd -g 1002 gitgroup; useradd -u 1000 -G gitgroup goblin
+RUN groupadd -g 1002 gitgroup; useradd -m -u 1000 -G gitgroup goblin
 
 RUN apt-get update && apt-get upgrade && apt-get -y install build-essential git
 
