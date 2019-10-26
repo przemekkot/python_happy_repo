@@ -24,13 +24,13 @@ pipeline {
     }
 
     stages {
-        stage('Code pull') {
+        stage('Code check') {
             steps {
                 echo 'Code pull'
                 sh 'make lint'
                 }
         }
-        stage('Test') {
+        stage('Basic tests') {
             steps {
                 echo 'Testing'
                 sh 'make test-xunit'
@@ -43,6 +43,17 @@ pipeline {
                        archiveArtifacts allowEmptyArchive: true, artifacts: 'build/*_pytest.xml', fingerprint: true
                        //TODO: add saving stuff for coverage
                 }
+            }
+        }
+        stage('Push to Tests branch') {
+            when {
+                 branch 'dev'
+            }
+            steps {
+                echo 'Pushing to tests'
+                sh 'git checkout tests'
+                sh 'git merge dev'
+                sh 'git push origin tests'
             }
         }
         stage('Build package') {
@@ -71,6 +82,13 @@ pipeline {
         }
 
         stage('Release') {
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+                branch 'release'
+                tag 'release-*'
+            }
             steps {
                 echo 'Releasing'
                 // here do all the stuff for publishing package online
