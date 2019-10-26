@@ -46,9 +46,6 @@ pipeline {
             }
         }
         stage('Push to Tests branch') {
-            when {
-                 branch 'jenkinsfile'
-            }
             steps {
                 echo 'Pushing to tests'
                 sh 'git checkout tests'
