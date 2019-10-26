@@ -3,7 +3,7 @@ pipeline {
     agent {
           dockerfile {
                filename 'Dockerfile'
-               args '-v keys:/home/goblin/.ssh
+               //args '-v keys:/home/goblin/.ssh'
                //args '-v /etc/passwd:/etc/passwd'
                //this probably breaks build at the end: args '--rm'
                reuseNode true
