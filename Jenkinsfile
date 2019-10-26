@@ -49,6 +49,8 @@ pipeline {
             steps {
                 echo 'Pushing to tests'
                 sshagent(['Blue']) {
+                   sh 'git fetch --all'
+                   sh 'git remote -v'
                    //sh 'git remote add main git@192.168.8.106:/srv/happy_repo.git'
                    sh 'git checkout tests'
                    sh 'git merge dev'
