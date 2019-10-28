@@ -62,7 +62,7 @@ pipeline {
                    //sh 'git remote add main git@192.168.8.106:/srv/happy_repo.git'
                    sh 'git checkout origin/tests'
                    sh 'git merge origin/dev'
-                   sh 'git push origin tests'
+                   sh 'git push origin origin/tests'
                 }
             }
         }
