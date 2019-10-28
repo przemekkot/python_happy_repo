@@ -29,8 +29,7 @@ pipeline {
         stage('Init and Code check') {
             steps {
                 echo 'Code pull'
-                sh 'python3 -m virtualenv .venv'
-                sh 'source .venv/bin/activate'
+                sh 'python3 -m virtualenv .venv; source .venv/bin/activate'
                 sh 'pip install --user -r requirements_dev.txt'
                 sh 'make lint'
                 }
@@ -47,26 +46,29 @@ pipeline {
             post {
                 always {
                        archiveArtifacts allowEmptyArchive: true, artifacts: 'build/*_pytest.xml', fingerprint: true
-                       //TODO: add saving stuff for coverage
                 }
             }
         }
         stage('Push to Tests branch') {
+            //when {
+                 
+            //}
             steps {
                 echo 'Pushing to tests'
                 sshagent(['Blue']) {
-                   sh 'git fetch --all'
-                   sh 'git remote -v'
+                   echo 'in sshagent block'
+                   //sh 'git fetch --all'
+                   //sh 'git remote -v'
                    //sh 'git remote add main git@192.168.8.106:/srv/happy_repo.git'
-                   sh 'git checkout tests'
-                   sh 'git merge dev'
-                   sh 'git push main tests'
+                   sh 'git checkout origin/tests'
+                   sh 'git merge origin/dev'
+                   sh 'git push origin tests'
                 }
             }
         }
         stage('Build package') {
             when {
-                anyOf { branch 'dev'; branch 'master' }
+                anyOf { branch 'tests'; branch 'master' }
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
