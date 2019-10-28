@@ -31,7 +31,7 @@ pipeline {
                 echo 'Code pull'
                 sh 'python3 -m virtualenv .venv'
                 sh 'source .venv/bin/activate'
-                sh 'pip --user install -r requirements_dev.txt'
+                sh 'pip install --user -r requirements_dev.txt'
                 sh 'make lint'
                 }
         }
