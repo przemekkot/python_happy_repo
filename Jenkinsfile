@@ -30,7 +30,7 @@ pipeline {
             steps {
                 echo 'Code pull'
                 sh 'python3 -m virtualenv .venv'
-                sh '. .venv/bin/activate'
+                sh 'source .venv/bin/activate'
                 sh 'pip install -r requirements_dev.txt'
                 sh 'make lint'
                 }
@@ -38,6 +38,7 @@ pipeline {
         stage('Basic tests') {
             steps {
                 echo 'Testing'
+                
                 sh 'make test-xunit'
 
                 echo 'Coverage'
