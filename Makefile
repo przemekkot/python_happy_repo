@@ -1,4 +1,4 @@
-.PHONY: help clean clean-build clean-pyc clean-test coverage check_code dist dist-upload docs document docker format_code install lint requirements servedocs test test-all virtualenv
+.PHONY: help clean clean-build clean-pyc clean-test coverage check_code dist dist-upload docs document docker format_code install lint requirements servedocs test test-all virtualenv activate env test-xunit
 
 .DEFAULT_GOAL := help
 
@@ -27,8 +27,14 @@ export PRINT_HELP_PYSCRIPT
 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
+PACKAGE_NAME=happy_repo
+
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+
+commit:
+	make lint
+	git commit
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
@@ -52,13 +58,13 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source happy_repo -m pytest
+	coverage run --source $(PACKAGE_NAME) -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
 check_code:
-	pycodestyle ./happy_repo/*
+	pycodestyle ./$(PACKAGE_NAME)/*
 	pycodestyle ./tests/*
 
 dist: clean
@@ -67,31 +73,34 @@ dist: clean
 	python setup.py bdist_wheel
 
 dist-upload:
-	twine upload dist/*
+	twine upload --repository-url ${PYPI_REPO} dist/* -u ${PYPI_USER} -p ${PYPI_PASS}
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/happy_repo.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ happy_repo
+	sphinx-apidoc -o docs/ $(PACKAGE_NAME)
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
 
 document:
-	pycco -spi -d docs/literate happy_repo/*
+	pycco -spi -d docs/literate $(PACKAGE_NAME)/*
 
 docker: clean
-	docker build -t happy_repo:latest .
+	docker build -t $(PACKAGE_NAME):latest .
 
 format_code:
-	autopep8 -i -r -aaa ./happy_repo/*
+	autopep8 -i -r -aaa ./$(PACKAGE_NAME)/*
 	autopep8 -i -r -aaa ./tests/*
+
+install-self:
+	pip install $(PACKAGE_NAME)
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
 
 lint: ## check style with flake8
-	flake8 happy_repo tests
+	flake8 $(PACKAGE_NAME) tests
 
 requirements:
 	.venv/bin/pip freeze --local > requirements.txt
@@ -101,6 +110,13 @@ servedocs: docs ## compile the docs watching for changes
 
 test:
 	python -m pytest \
+		-v \
+		tests/
+
+test-xunit:
+	mkdir -p build
+	python -m pytest \
+		--junitxml=build/output_pytest.xml \
 		-v \
 		tests/
 
@@ -114,3 +130,10 @@ virtualenv:
 	@echo
 	@echo "VirtualENV Setup Complete. Now run: source .venv/bin/activate"
 	@echo
+
+activate:
+	source .venv/bin/activate
+
+env:
+	make virtualenv
+	make activate
