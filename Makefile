@@ -32,6 +32,9 @@ PACKAGE_NAME=happy_repo
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
+activate:
+	source .venv/bin/activate
+
 commit:
 	make lint
 	git commit
@@ -92,6 +95,10 @@ document:
 docker: clean
 	docker build -t $(PACKAGE_NAME):latest .
 
+env:
+	make virtualenv
+	make activate
+
 format_code:
 	autopep8 -i -r -aaa ./$(PACKAGE_NAME)/*
 	autopep8 -i -r -aaa ./tests/*
@@ -104,6 +111,43 @@ install: clean ## install the package to the active Python's site-packages
 
 lint: ## check style with flake8
 	flake8 $(PACKAGE_NAME) tests
+
+pipeline:
+	make lint
+	make test-all
+	make test-xunit
+	make coverage
+	make push-to-test
+	make dist
+	make dist-test-upload PYPI_USER=${PYPI_USER} PYPI_PASS=${PYPI_PASS}
+	make push-to-master
+	make push-to-przemek
+	make push-to-release
+	make dist
+	make dist-upload PYPI_USER=${PYPI_USER} PYPI_PASS=${PYPI_PASS}
+
+push-tags:
+	git push origin --tags
+
+push-to-tests:
+	git checkout origin/tests
+	git merge origin/dev
+	git push origin origin/tests
+
+push-to-master:
+	git checkout origin/master
+	git merge origin/tests
+	git push origin origin/master
+
+push-to-przemek:
+	git checkout origin/master
+	git push przemekkot --tags
+	git push przemekkot origin/master
+
+push-to-oren:
+	git checkout origin/release
+	git push orenkot --tags
+	git push orenkot refs/heads/release:refs/heads/master
 
 requirements:
 	.venv/bin/pip freeze --local > requirements.txt
@@ -134,9 +178,3 @@ virtualenv:
 	@echo "VirtualENV Setup Complete. Now run: source .venv/bin/activate"
 	@echo
 
-activate:
-	source .venv/bin/activate
-
-env:
-	make virtualenv
-	make activate
