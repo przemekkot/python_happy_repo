@@ -1,15 +1,6 @@
 pipeline {
 
     agent any
-    //      dockerfile {
-    //           filename 'Dockerfile'
-               //args '-v keys:/home/goblin/.ssh'
-               //args '-v /etc/passwd:/etc/passwd'
-               //this probably breaks build at the end: args '--rm'
-    //           reuseNode true
-    //      }
-    //add a docker file for this stage only
-    //}
 
     options {
           //skipDefaultCheckout(true)
@@ -19,9 +10,8 @@ pipeline {
     }
 
     environment {
-      PYPI_USER=credentials('pypi_user')
+      PYPI_USER=credentials('pypi_user') // assume same login and pass for test and main
       PYPI_PASS=credentials('pypi_pass')
-      PYPI_REPO='https://test.pypi.org/legacy/'
       JENKINS="True"
     }
 
@@ -29,16 +19,17 @@ pipeline {
         stage('Init and Code check') {
             steps {
                 echo 'Code pull'
-                sh 'python3 -m virtualenv .venv; source .venv/bin/activate'
-                sh 'pip install --user -r requirements_dev.txt'
+                sh 'make env'
                 sh 'make lint'
                 }
         }
         stage('Basic tests') {
             steps {
                 echo 'Testing'
-                
+
+                sh 'make test-all'
                 sh 'make test-xunit'
+
 
                 echo 'Coverage'
                 sh 'make coverage'
@@ -50,25 +41,21 @@ pipeline {
             }
         }
         stage('Push to Tests branch') {
-            //when {
-                 
-            //}
+            when {
+                 anyOf {
+                       branch 'dev'
+                 }
+            }
             steps {
                 echo 'Pushing to tests'
                 sshagent(['Blue']) {
-                   echo 'in sshagent block'
-                   //sh 'git fetch --all'
-                   //sh 'git remote -v'
-                   //sh 'git remote add main git@192.168.8.106:/srv/happy_repo.git'
-                   sh 'git checkout origin/tests'
-                   sh 'git merge origin/dev'
-                   sh 'git push origin origin/tests'
+                   sh 'make push-to-test'
                 }
             }
         }
-        stage('Build package') {
+        stage('Build test package and publish') {
             when {
-                anyOf { branch 'tests'; branch 'master' }
+                anyOf { branch 'tests'; }
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
@@ -76,49 +63,73 @@ pipeline {
             steps {
                 echo 'Building'
                 sh 'make dist'
+                sh 'make dist-test-upload PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
             }
             post {
                 always {
-                    // Archive unit tests for the future
                     archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/*whl', fingerprint: true
                     echo 'Results saved'
                 }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying'
-                // here do all the stuff for deploying service online
+                success {
+                    echo 'Pushing to master'
+                    sshagent(['Blue']) {
+                        sh 'make push-to-master'
+                    }
+                }
             }
         }
 
+        stage('Deploy') {
+            when {
+                 branch 'master'
+            }
+            steps {
+                echo 'Deploying'
+                echo 'Pushing to github master'
+                sshagent(['Red']) {
+                     sh 'make push-to-przemek'
+                }
+            }
+        }
+
+        stage('Push to Release branch') {
+            when {
+                 anyOf {
+                       branch 'master'
+                 }
+                 tag 'release*'
+            }
+            steps {
+                echo 'Pushing to Release'
+                sshagent(['Blue']) {
+                    sh 'make push-to-release'
+                }
+            }
+        }
         stage('Release') {
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
                 branch 'release'
-                tag 'release-*'
+                tag 'release*'
             }
             steps {
                 echo 'Releasing'
-                // here do all the stuff for publishing package online
-
-                //sh 'echo -e "[pypi]" >> ~/.pypirc'
-                //sh 'echo -e "repository: https://test.pypi.org/legacy/" >> ~/.pypirc'
-                //sh 'echo -e "username = $PYPI_USER" >> ~/.pypirc'
-                //sh 'echo -e "password = $PYPI_PASS" >> ~/.pypirc'
-
-                // .pypirc is in jenkins folder
-                sh 'make dist-upload PYPI_REPO=$PYPI_REPO PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
+                sh 'make dist'
+                sh 'make dist-upload PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
+            }
+            post {
+                 success {
+                     sshagent(['Oren']) {
+                         sh 'make push-to-release'
+                     }
+                 }
             }
         }    
     }
     post {
         always {
-            //clean the container
-            //cleaning the dockers 
-            //this should be done somewhere: sh 'docker system prune --volumes -f'
             echo 'This will always run'
         }
         success {
