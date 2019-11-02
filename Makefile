@@ -28,6 +28,8 @@ export PRINT_HELP_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 PACKAGE_NAME=happy_repo
+PYPI_REPO=https://upload.pypi.org/legacy/
+PYPI_TEST_REPO=https://test.pypi.org/legacy/
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -72,8 +74,11 @@ dist: clean
 	python setup.py sdist
 	python setup.py bdist_wheel
 
+dist-test-upload:
+	twine upload --repository-url $(PYPI_TEST_REPO) dist/* -u ${PYPI_USER} -p ${PYPI_PASS}
+
 dist-upload:
-	twine upload --repository-url ${PYPI_REPO} dist/* -u ${PYPI_USER} -p ${PYPI_PASS}
+	twine upload --repository-url $(PYPI_REPO) dist/* -u ${PYPI_USER} -p ${PYPI_PASS}
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/happy_repo.rst
