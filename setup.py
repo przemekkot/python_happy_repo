@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """The setup script."""
-
+import os
 from setuptools import setup, find_packages
 
-with open('.version') as version_file:
-    version = version_file.read()
+__folder__ = os.path.abspath(os.path.dirname(__file__))
+
+with open(os.path.join(__folder__,'.version')) as version_file:
+    version = version_file.read().strip()
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
