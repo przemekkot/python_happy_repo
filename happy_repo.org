@@ -1,5 +1,5 @@
 * kanban
-** in
+** pool
 *** add read the docs to pipeline
 *** fix the setup.py (figure out what to do)
 *** check tox and what i can do
@@ -7,6 +7,35 @@
 *** fill out docs
 *** generate docs
 *** do performance checking (?)
-*** divide the pipeline of 2 branches or 3 with publishing to real pypi and some github repo
+*** can i make a function of those pushes to other repos?
+*** run jenkins as deamon on this pipeline
+*** run jnekins in docker on this pipeline
+*** run jenkins in a docker, that runs a docker
+** in
+*** DONE add repository on przemekkot github
+    CLOSED: [2019-10-31 czw 11:33]
+
+*** add remotes (orenkot and przemekkot) to repository
+git remote add przemekkot https://github.com/przemekkot/python_happy_repo.git
+git remote add orenkot https://github.com/orenkot/python_happy_repo.git
+
+*** play with tags and push tags
+*** do a whole pipeline
+*** run this as multibranch pipeline
+
 ** started
 ** done
+
+
+* notes
+** pipeline
+- build venv and check code with linter
+- do some basic testing and coverage
+- push to tests if branch dev (and jenkinsfile)
+- make dist on test and publish to test pypi
+--on success: push to master if branch tests (and jenkinsfile) 
+- deploy is left empty
+- push to github (przemekkot)
+- push to release if branch master and tag release
+- publish to pypi, push to orenkot if branch release and tag release
+
