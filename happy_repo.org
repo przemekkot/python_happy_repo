@@ -1,9 +1,13 @@
 * kanban
 ** pool
+*** can tox produce xunit output?
 *** add read the docs to pipeline
-*** fix the setup.py (figure out what to do)
-*** check tox and what i can do
-*** make readme.rst
+*** DONE fix the setup.py (figure out what to do)
+    CLOSED: [2019-11-02 sob 11:16]
+*** DONE check tox and what i can do
+    CLOSED: [2019-11-02 sob 11:16]
+*** DONE make readme.rst
+    CLOSED: [2019-11-02 sob 11:16]
 *** fill out docs
 *** generate docs
 *** do performance checking (?)
@@ -12,10 +16,12 @@
 *** run jnekins in docker on this pipeline
 *** run jenkins in a docker, that runs a docker
 ** in
+*** .version not found by setup.py
 *** DONE add repository on przemekkot github
     CLOSED: [2019-10-31 czw 11:33]
 
-*** add remotes (orenkot and przemekkot) to repository
+*** DONE add remotes (orenkot and przemekkot) to repository
+    CLOSED: [2019-11-02 sob 17:48]
 git remote add przemekkot https://github.com/przemekkot/python_happy_repo.git
 git remote add orenkot https://github.com/orenkot/python_happy_repo.git
 

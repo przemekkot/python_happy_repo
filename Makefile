@@ -117,7 +117,7 @@ pipeline:
 	make test-all
 	make test-xunit
 	make coverage
-	make push-to-test
+	make push-to-tests
 	make dist
 	make dist-test-upload PYPI_USER=${PYPI_USER} PYPI_PASS=${PYPI_PASS}
 	make push-to-master
