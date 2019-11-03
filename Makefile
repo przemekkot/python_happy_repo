@@ -132,24 +132,24 @@ push-tags:
 	git push origin --tags
 
 push-to-tests:
-	git checkout origin/tests
-	git merge origin/dev
-	git push origin origin/tests
+	git checkout tests
+	git merge dev
+	git push origin tests
 
 push-to-master:
-	git checkout origin/master
-	git merge origin/tests
-	git push origin origin/master
+	git checkout master
+	git merge tests
+	git push origin master
 
 push-to-przemek:
-	git checkout origin/master
+	git checkout master
 	git push przemekkot --tags
-	git push przemekkot origin/master
+	git push przemekkot master
 
 push-to-oren:
-	git checkout origin/release
+	git checkout heads/release
 	git push orenkot --tags
-	git push orenkot refs/heads/release:refs/heads/master
+	git push orenkot heads/release:refs/heads/master
 
 requirements:
 	.venv/bin/pip freeze --local > requirements.txt
