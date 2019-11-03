@@ -4,6 +4,7 @@ import sys
 import click
 from happy_repo import simple_function
 
+
 @click.command()
 @click.option('--upper',
               type=bool,
@@ -20,6 +21,7 @@ def main(upper, string):
     sys.stdout.write(value.upper() if upper else value)
 
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover
