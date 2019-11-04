@@ -27,6 +27,12 @@ export PRINT_HELP_PYSCRIPT
 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
+OREN_REPO=git@github.com:orenkot/python_happy_repo.git
+PRZEMEK_REPO=git@github.com:przemekkot/python_happy_repo.git
+
+OREN_EMAIL=redcat7@gmail.com
+PRZEMEK_EMAIL=przemyslaw.kot@gmail.com
+
 PACKAGE_NAME=happy_repo
 PYPI_REPO=https://upload.pypi.org/legacy/
 PYPI_TEST_REPO=https://test.pypi.org/legacy/
@@ -123,10 +129,10 @@ pipeline:
 	make dist
 	make dist-test-upload PYPI_USER=${PYPI_USER} PYPI_PASS=${PYPI_PASS}
 	make push-to-master
-	make push-to-przemek
-	make push-to-release
 	make dist
 	make dist-upload PYPI_USER=${PYPI_USER} PYPI_PASS=${PYPI_PASS}
+	make push-to-przemek
+	make push-to-oren
 
 push-tags:
 	git push origin --tags
@@ -141,20 +147,17 @@ push-to-master:
 	git merge tests
 	git push origin master
 
-push-to-release:
-	git checkout refs/heads/release
-	git merge master
-	git push origin heads/release
-
 push-to-przemek:
+	git config user.email "$(PRZEMEK_EMAIL)"
 	git checkout master
-	git push przemekkot --tags
-	git push przemekkot master
+	git push $(PRZEMEK_REPO) --tags
+	git push $(PRZEMEK_REPO) master
 
 push-to-oren:
-	git checkout heads/release
-	git push orenkot --tags
-	git push orenkot heads/release:refs/heads/master
+	git config user.email "$(OREN_EMAIL)"
+	git checkout master
+	git push $(OREN_REPO) --tags
+	git push $(OREN_REPO) master
 
 requirements:
 	.venv/bin/pip freeze --local > requirements.txt
