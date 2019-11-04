@@ -48,7 +48,7 @@ pipeline {
             steps {
                 echo 'Pushing to tests'
                 sshagent(['Blue']) {
-                   sh 'make push-to-test'
+                   sh 'make push-to-tests'
                 }
             }
         }
