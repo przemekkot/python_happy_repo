@@ -42,9 +42,7 @@ pipeline {
         }
         stage('Push to Tests branch') {
             when {
-                 anyOf {
-                       branch 'dev'
-                 }
+                 branch 'dev'
             }
             steps {
                 echo 'Pushing to tests'
