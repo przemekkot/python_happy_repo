@@ -120,7 +120,7 @@ install: clean ## install the package to the active Python's site-packages
 lint: ## check style with flake8
 	flake8 $(PACKAGE_NAME) tests
 
-pipeline:
+pipeline: clean
 	make lint
 	make test-all
 	make test-xunit
