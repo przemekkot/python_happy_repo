@@ -18,7 +18,7 @@ pipeline {
         stage('Init and Code check') {
             steps {
                 echo 'Code pull'
-                sh 'python3 -m virtualenv .venv; source .venv/bin/activate'
+                sh 'python3.6 -m virtualenv .venv; source .venv/bin/activate'
                 sh 'pip install --user -r requirements_dev.txt'
                 sh 'make lint'
                 }
