@@ -90,27 +90,12 @@ pipeline {
                 }
             }
         }
-
-        stage('Push to Release branch') {
-            when {
-                 anyOf {
-                       branch 'master'
-                 }
-                 tag 'release*'
-            }
-            steps {
-                echo 'Pushing to Release'
-                sshagent(['Blue']) {
-                    sh 'make push-to-release'
-                }
-            }
-        }
         stage('Release') {
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
-                branch 'release'
+                branch 'master'
                 tag 'release*'
             }
             steps {
@@ -121,7 +106,7 @@ pipeline {
             post {
                  success {
                      sshagent(['Oren']) {
-                         sh 'make push-to-release'
+                         sh 'make push-to-oren'
                      }
                  }
             }
