@@ -141,6 +141,11 @@ push-to-master:
 	git merge tests
 	git push origin master
 
+push-to-release:
+	git checkout refs/heads/release
+	git merge master
+	git push origin heads/release
+
 push-to-przemek:
 	git checkout master
 	git push przemekkot --tags
