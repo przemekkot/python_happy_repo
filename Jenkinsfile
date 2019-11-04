@@ -18,6 +18,7 @@ pipeline {
         stage('Init and Code check') {
             steps {
                 echo 'Code pull'
+                sh 'git branch'
                 sh 'python -m virtualenv .venv; source .venv/bin/activate'
                 sh 'pip install --user -r requirements_dev.txt'
                 sh 'make lint'
@@ -53,7 +54,7 @@ pipeline {
         }
         stage('Build test package and publish') {
             when {
-                anyOf { branch 'tests'; }
+                branch 'tests'
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
