@@ -138,7 +138,7 @@ push-tags:
 	git push origin --tags
 
 push-to-tests:
-	git checkout tests
+	git checkout origin/tests
 	git merge dev
 	git push origin tests
 
