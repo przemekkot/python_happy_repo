@@ -1,5 +1,5 @@
 def runCommandInMyEnvironment(cmd) {
-  sh "setup_environment_command; source ./some/file; ${cmd}"
+  sh "virtualenv .venv; . .venv/bin/activate; ${cmd}"
 }
 
 pipeline {
@@ -30,10 +30,13 @@ pipeline {
             steps {
                 echo 'Testing'
 
-                sh 'make test-all'
-                sh 'make test-xunit'
+                sh 'runCommandInMyEnvironment("make test-all")'
+                sh 'runCommandInMyEnvironment("make test-xunit")'
 
-
+            }
+        }
+        stage('Code coverage') {
+            steps {
                 echo 'Coverage'
                 sh 'make coverage'
             }
