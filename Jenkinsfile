@@ -1,3 +1,7 @@
+def runCommandInMyEnvironment(cmd) {
+  sh "setup_environment_command; source ./some/file; ${cmd}"
+}
+
 pipeline {
     agent any
 
@@ -19,9 +23,7 @@ pipeline {
             steps {
                 echo 'Code pull'
                 sh 'git branch'
-                sh 'virtualenv .venv; . .venv/bin/activate'
-                sh 'pip install --user -r requirements_dev.txt'
-                sh 'make lint'
+                sh 'virtualenv .venv; . .venv/bin/activate; pip3 install --user -r requirements_dev.txt; make lint'
                 }
         }
         stage('Basic tests') {
