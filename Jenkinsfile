@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo 'Code pull'
                 sh 'git branch'
-                sh 'python -m virtualenv .venv; source .venv/bin/activate'
+                sh 'virtualenv .venv; source .venv/bin/activate'
                 sh 'pip install --user -r requirements_dev.txt'
                 sh 'make lint'
                 }
