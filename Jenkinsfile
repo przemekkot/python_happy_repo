@@ -53,7 +53,7 @@ pipeline {
             }
             steps {
                 echo 'Pushing to tests'
-                sshagent(['Blue']) {
+                sshagent(['jenkins']) {
                    sh 'make push-to-tests'
                 }
             }
