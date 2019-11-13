@@ -23,7 +23,7 @@ pipeline {
             steps {
                 echo 'Code pull'
                 sh 'git branch'
-                sh 'virtualenv .venv; . .venv/bin/activate; pip3 install --user -r requirements_dev.txt; make lint'
+                sh 'virtualenv .venv; . .venv/bin/activate; pip3 install -r requirements_dev.txt; make lint'
                 }
         }
         stage('Basic tests') {
