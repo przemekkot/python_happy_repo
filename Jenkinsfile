@@ -17,8 +17,8 @@ pipeline {
       PYPI_PASS=credentials('pypi_pass')
       JENKINS="True"
 
-      VIRTUAL_ENV=.venv
-      PATH=.venv/bin:/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      VIRTUAL_ENV='.venv'
+      PATH='.venv/bin:/usr/local/openjdk-8/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
     }
 
     stages {
