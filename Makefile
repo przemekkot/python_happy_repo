@@ -139,7 +139,7 @@ push-tags:
 
 push-to-tests:
 	git checkout tests
-	git merge dev
+	git merge origin/dev
 	git push origin HEAD:tests
 
 push-to-master:
