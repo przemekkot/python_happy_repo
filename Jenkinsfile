@@ -29,9 +29,8 @@ pipeline {
         stage('Basic tests') {
             steps {
                 echo 'Testing'
-
-                sh 'runCommandInMyEnvironment("make test-all")'
-                sh 'runCommandInMyEnvironment("make test-xunit")'
+                runCommandInMyEnvironment('make test-all')
+                runCommandInMyEnvironment('make test-xunit')
 
             }
         }
