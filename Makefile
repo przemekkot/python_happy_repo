@@ -30,9 +30,6 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 OREN_REPO=git@github.com:orenkot/python_happy_repo.git
 PRZEMEK_REPO=git@github.com:przemekkot/python_happy_repo.git
 
-OREN_EMAIL=redcat7@gmail.com
-PRZEMEK_EMAIL=przemyslaw.kot@gmail.com
-
 PACKAGE_NAME=happy_repo
 PYPI_REPO=https://upload.pypi.org/legacy/
 PYPI_TEST_REPO=https://test.pypi.org/legacy/
