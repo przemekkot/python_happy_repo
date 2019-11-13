@@ -23,6 +23,7 @@ pipeline {
             steps {
                 echo 'Code pull'
                 sh 'git branch'
+                sh 'git fetch origin'
                 sh 'virtualenv .venv; . .venv/bin/activate; pip3 install -r requirements_dev.txt; make lint'
                 }
         }
