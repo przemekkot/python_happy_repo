@@ -144,20 +144,18 @@ push-to-tests:
 
 push-to-master:
 	git checkout master
-	git merge tests
-	git push origin master
+	git merge origin/tests
+	git push origin HEAD:master
 
 push-to-przemek:
-	git config user.email "$(PRZEMEK_EMAIL)"
 	git checkout master
 	git push $(PRZEMEK_REPO) --tags
-	git push $(PRZEMEK_REPO) master
+	git push $(PRZEMEK_REPO) HEAD:master
 
 push-to-oren:
-	git config user.email "$(OREN_EMAIL)"
 	git checkout master
 	git push $(OREN_REPO) --tags
-	git push $(OREN_REPO) master
+	git push $(OREN_REPO) HEAD:master
 
 requirements:
 	.venv/bin/pip freeze --local > requirements.txt
