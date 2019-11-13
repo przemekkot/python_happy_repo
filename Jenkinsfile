@@ -68,8 +68,11 @@ pipeline {
             }
             steps {
                 echo 'Building'
-                sh 'make dist'
-                sh 'make dist-test-upload PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
+                withEnv(['PATH+WHATEVER=.venv/bin']) {
+                    sh 'make dist'
+                    sh 'make dist-test-upload PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
+                }
+
             }
             post {
                 always {
@@ -78,7 +81,7 @@ pipeline {
                 }
                 success {
                     echo 'Pushing to master'
-                    sshagent(['Blue']) {
+                    sshagent(['jenkins']) {
                         sh 'make push-to-master'
                     }
                 }
@@ -92,7 +95,7 @@ pipeline {
             steps {
                 echo 'Deploying'
                 echo 'Pushing to github master'
-                sshagent(['Red']) {
+                sshagent(['przemek_deploy']) {
                      sh 'make push-to-przemek'
                 }
             }
@@ -107,12 +110,14 @@ pipeline {
             }
             steps {
                 echo 'Releasing'
-                sh 'make dist'
-                sh 'make dist-upload PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
+                withEnv(['PATH+WHATEVER=.venv/bin']) {
+                    sh 'make dist'
+                    sh 'make dist-upload PYPI_USER=$PYPI_USER PYPI_PASS=$PYPI_PASS'
+                }
             }
             post {
                  success {
-                     sshagent(['Oren']) {
+                     sshagent(['oren_deploy']) {
                          sh 'make push-to-oren'
                      }
                  }
